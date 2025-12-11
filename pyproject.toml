@@ -10,7 +10,7 @@ dependencies = [
     "pydantic>=2.12.5",
     "python-multipart>=0.0.20",
     "qwen-vl-utils>=0.0.14",
-    "torch>=2.9.1",
-    "torchvision>=0.24.1",
+#    "torch>=2.9.1",
+#    "torchvision>=0.24.1",
     "uvicorn>=0.38.0",
 ]
