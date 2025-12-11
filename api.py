@@ -9,9 +9,12 @@ import pytesseract
 from transformers import TrOCRProcessor, VisionEncoderDecoderModel
 
 def load_trocr_model():
-    processor = TrOCRProcessor.from_pretrained('microsoft/trocr-small-handwritten')
-    model = VisionEncoderDecoderModel.from_pretrained('microsoft/trocr-small-handwritten')
+    SMALL_MODEL_ID = 'microsoft/trocr-small-handwritten'
+    processor = TrOCRProcessor.from_pretrained(SMALL_MODEL_ID)
+    model = VisionEncoderDecoderModel.from_pretrained(SMALL_MODEL_ID)
+    
     return processor, model
+
 
 def trocr_multiline(processor, model, img, y1: int = 70, y2: int = 120, y3: int = 165, y4: int = 220):
     """Crop image into 5 lines, run TrOCR on each, combine results."""
@@ -27,9 +30,13 @@ def trocr_multiline(processor, model, img, y1: int = 70, y2: int = 120, y3: int 
     
     lines = []
     for crop in crops:
-        pixel_values = processor(images=crop, return_tensors="pt").pixel_values
-        generated_ids = model.generate(pixel_values)
-        text = processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
+        # pixel_values = processor(images=crop, return_tensors="pt").pixel_values
+        # generated_ids = model.generate(pixel_values)
+        # text = processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
+        # lines.append(text)
+
+        result = trocr_pipeline(crop)
+        text = result[0]['generated_text']
         lines.append(text)
     
     return "\n".join(lines)
