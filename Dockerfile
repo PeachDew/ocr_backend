@@ -41,11 +41,10 @@ WORKDIR /app
 COPY --from=builder /usr/local/lib/python3.13/site-packages/ /usr/local/lib/python3.13/site-packages/
 COPY --from=builder /usr/local/bin/ /usr/local/bin/
 
-# Copy the rest of the application code (main.py, etc.)
 COPY . .
 
 # Expose port 
 EXPOSE 8000
 
 # Start the FastAPI server
-CMD uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}
+CMD uvicorn api:app --host 0.0.0.0 --port ${PORT:-8000}
