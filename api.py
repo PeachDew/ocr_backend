@@ -9,8 +9,8 @@ import pytesseract
 from transformers import TrOCRProcessor, VisionEncoderDecoderModel
 
 def load_trocr_model():
-    processor = TrOCRProcessor.from_pretrained('microsoft/trocr-base-handwritten')
-    model = VisionEncoderDecoderModel.from_pretrained('microsoft/trocr-base-handwritten')
+    processor = TrOCRProcessor.from_pretrained('microsoft/trocr-small-handwritten')
+    model = VisionEncoderDecoderModel.from_pretrained('microsoft/trocr-small-handwritten')
     return processor, model
 
 def trocr_multiline(processor, model, img, y1: int = 70, y2: int = 120, y3: int = 165, y4: int = 220):
