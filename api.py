@@ -64,6 +64,7 @@ app = FastAPI()
 origins = [
     "http://localhost",
     "http://localhost:5173", # Update this if your Svelte frontend uses a different port
+    "ocrsharing.vercel.app",
 ]
 
 app.add_middleware(
