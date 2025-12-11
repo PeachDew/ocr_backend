@@ -1,5 +1,5 @@
 # Use Python 3.10 slim image for smaller size
-FROM python:3.12-slim
+FROM python:3.13-slim
 
 # Install system dependencies for Tesseract and image processing
 RUN apt-get update && apt-get install -y \
