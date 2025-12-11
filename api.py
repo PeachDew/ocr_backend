@@ -30,15 +30,11 @@ def trocr_multiline(processor, model, img, y1: int = 70, y2: int = 120, y3: int 
     
     lines = []
     for crop in crops:
-        # pixel_values = processor(images=crop, return_tensors="pt").pixel_values
-        # generated_ids = model.generate(pixel_values)
-        # text = processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
-        # lines.append(text)
-
-        result = trocr_pipeline(crop)
-        text = result[0]['generated_text']
+        pixel_values = processor(images=crop, return_tensors="pt").pixel_values
+        generated_ids = model.generate(pixel_values)
+        text = processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
         lines.append(text)
-    
+ 
     return "\n".join(lines)
 
 def OCR_inference(processor, model, image_PIL):
