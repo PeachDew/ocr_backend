@@ -6,38 +6,39 @@ from pydantic import BaseModel
 import base64
 from pathlib import Path
 import pytesseract
-from transformers import TrOCRProcessor, VisionEncoderDecoderModel
+# from transformers import TrOCRProcessor, VisionEncoderDecoderModel
 
-def load_trocr_model():
-    SMALL_MODEL_ID = 'microsoft/trocr-small-handwritten'
-    processor = TrOCRProcessor.from_pretrained(SMALL_MODEL_ID)
-    model = VisionEncoderDecoderModel.from_pretrained(SMALL_MODEL_ID)
-    
-    return processor, model
+# def load_trocr_model():
+#     SMALL_MODEL_ID = 'microsoft/trocr-small-handwritten'
+#     processor = TrOCRProcessor.from_pretrained(SMALL_MODEL_ID)
+#     model = VisionEncoderDecoderModel.from_pretrained(SMALL_MODEL_ID)
+#
+#     return processor, model
 
 
-def trocr_multiline(processor, model, img, y1: int = 70, y2: int = 120, y3: int = 165, y4: int = 220):
-    """Crop image into 5 lines, run TrOCR on each, combine results."""
-    width = img.width
-    
-    crops = [
-        img.crop((0, 0, width, y1)),
-        img.crop((0, y1, width, y2)),
-        img.crop((0, y2, width, y3)),
-        img.crop((0, y3, width, y4)),
-        img.crop((0, y4, width, img.height))
-    ]
-    
-    lines = []
-    for crop in crops:
-        pixel_values = processor(images=crop, return_tensors="pt").pixel_values
-        generated_ids = model.generate(pixel_values)
-        text = processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
-        lines.append(text)
- 
-    return "\n".join(lines)
+# def trocr_multiline(processor, model, img, y1: int = 70, y2: int = 120, y3: int = 165, y4: int = 220):
+#     """Crop image into 5 lines, run TrOCR on each, combine results."""
+#     width = img.width
+#
+#     crops = [
+#         img.crop((0, 0, width, y1)),
+#         img.crop((0, y1, width, y2)),
+#         img.crop((0, y2, width, y3)),
+#         img.crop((0, y3, width, y4)),
+#         img.crop((0, y4, width, img.height))
+#     ]
+#
+#     lines = []
+#     for crop in crops:
+#         pixel_values = processor(images=crop, return_tensors="pt").pixel_values
+#         generated_ids = model.generate(pixel_values)
+#         text = processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
+#         lines.append(text)
+#
+#     return "\n".join(lines)
 
-def OCR_inference(processor, model, image_PIL):
+# def OCR_inference(processor, model, image_PIL):
+def OCR_inference(image_PIL):
     image = image_PIL.convert("RGB")
     
     # Tesseract (full image)
@@ -47,17 +48,17 @@ def OCR_inference(processor, model, image_PIL):
         tesseract_output = f"Error: {str(e)}"
     
     # TrOCR (multiline)
-    try:
-        trocr_output = trocr_multiline(processor, model, image)
-    except Exception as e:
-        trocr_output = f"Error: {str(e)}"
+    # try:
+    #     trocr_output = trocr_multiline(processor, model, image)
+    # except Exception as e:
+    #     trocr_output = f"Error: {str(e)}"
     
     return {
         "Tesseract": {"output": tesseract_output},
-        "TrOCR": {"output": trocr_output}
+        # "TrOCR": {"output": trocr_output}
     }
         
-processor, model = load_trocr_model()
+# processor, model = load_trocr_model()
 
 app = FastAPI()
 
@@ -101,13 +102,6 @@ def format_image(
 
     return image_pil
 
-def extract_and_parse_data(image: Image.Image):
-    mock_ocr_output = """
-    Name: John Doe
-    Favorite Food: Pizza
-    I Agree Checkbox: Checked
-    """
-    return mock_ocr_output
 
 @app.post("/ocr")
 async def process_ocr(request: OCRRequest):
@@ -124,7 +118,8 @@ async def process_ocr(request: OCRRequest):
     
     # predict
     # extracted_data: str = extract_and_parse_data(image_pil)
-    mock_results = OCR_inference(processor, model, image_pil)
+    # mock_results = OCR_inference(processor, model, image_pil)
+    mock_results = OCR_inference(image_pil)
         
     # Return the data in the structure the frontend expects: {"model_results": {...}}
     return {"model_results": mock_results}

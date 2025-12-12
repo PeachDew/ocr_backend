@@ -9,13 +9,13 @@ dependencies = [
     "ipykernel>=7.1.0",
     "pydantic>=2.12.5",
     "python-multipart>=0.0.20",
-    "qwen-vl-utils>=0.0.14",
+    # "qwen-vl-utils>=0.0.14",
    # "torch>=2.9.1",
    # "torchvision>=0.24.1",
     "uvicorn>=0.38.0",
     "pytesseract>=0.3.13",
     "Pillow>=12.0.0",    
-    "transformers>=4.57.3", 
-    "protobuf",
-    "sentencepiece"
+    # "transformers>=4.57.3", 
+    # "protobuf",
+    # "sentencepiece"
 ]

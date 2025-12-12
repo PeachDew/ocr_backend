@@ -22,10 +22,10 @@ RUN pip install --no-cache-dir uv
 RUN uv pip install --system --no-cache .
 
 # Install PyTorch and Torchvision separately, forcing CPU-only wheels
-RUN uv pip install --system --no-cache \
-    torch==2.9.1 \
-    torchvision==0.24.1 \
-    --extra-index-url https://download.pytorch.org/whl/cpu
+# RUN uv pip install --system --no-cache \
+#     torch==2.9.1 \
+#     torchvision==0.24.1 \
+#     --extra-index-url https://download.pytorch.org/whl/cpu
 
 FROM python:3.13-slim
 
